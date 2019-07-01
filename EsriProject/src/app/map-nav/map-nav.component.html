@@ -1,0 +1,10 @@
+<p>
+  map-nav works!
+</p>
+
+<app-esri-map
+  [center]="mapCenter"
+  [basemap]="basemapType"
+  [zoom]="mapZoomLevel"
+  (mapLoadedEvent)="mapLoadedEvent($event)">
+</app-esri-map>
