@@ -66,18 +66,19 @@ export class EsrimapComponent implements OnInit {
   public MapInit(){
     return loadModules([
       'esri/Map',
+      'esri/layers/FeatureLayer',
       'esri/views/MapView',
       'esri/Graphic',
-      'esri/geometry/SpatialReference',
+      'esri/geometry/SpatialReference'
     ])
-      .then(([Map, MapView, Graphic,SpatialReference]) => {
-        const map: __esri.Map = new Map({
+      .then(([Map,FeatureLayer, MapView, Graphic,SpatialReference]) => {
+        var map: __esri.Map = new Map({
           basemap: 'streets'
         });
 
         this.mapView = new MapView({
           container: this.mapViewEl.nativeElement,
-          center: [-122.4194, 37.7749],
+          center: this._center,
           zoom: 12,
           map: map
         });
@@ -103,11 +104,60 @@ export class EsrimapComponent implements OnInit {
           }
         });
 
+        var template = {
+          // autocasts as new PopupTemplate()
+          title: "{NAME} in {COUNTY}",
+          content: [
+            {
+              // It is also possible to set the fieldInfos outside of the content
+              // directly in the popupTemplate. If no fieldInfos is specifically set
+              // in the content, it defaults to whatever may be set within the popupTemplate.
+              type: "fields",
+              fieldInfos: [
+                {
+                  fieldName: "B12001_calc_pctMarriedE",
+                  label: "Married %"
+                },
+                {
+                  fieldName: "B12001_calc_numMarriedE",
+                  label: "People Married",
+                  format: {
+                    digitSeparator: true,
+                    places: 0
+                  }
+                },
+                {
+                  fieldName: "B12001_calc_numNeverE",
+                  label: "People that Never Married",
+                  format: {
+                    digitSeparator: true,
+                    places: 0
+                  }
+                },
+                {
+                  fieldName: "B12001_calc_numDivorcedE",
+                  label: "People Divorced",
+                  format: {
+                    digitSeparator: true,
+                    places: 0
+                  }
+                }
+              ]
+            }
+          ]
+        };
         
-
+         var featureLayer = FeatureLayer ({
+          url:
+          "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/ACS_Marital_Status_Boundaries/FeatureServer/2",
+        popupTemplate: template
+        })
+        
+        map.add(featureLayer);
         this.msService.addPoint(pointGraphic);
         this.mapView.graphics.add(this.msService.points[this.msService.points.length - 1]);
         
+
         this.mapView.when(
           () => {
             if (this.msService.points.length) {
