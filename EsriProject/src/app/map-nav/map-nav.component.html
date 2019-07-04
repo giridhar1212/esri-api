@@ -1,6 +1,12 @@
 <p>
   map-nav works!
 </p>
+<div class="col-md-5 col-xs-12">
+<p-dropdown 
+[options]="cities" 
+placeholder="Select" 
+[(ngModel)]="selectedCity" >
+</p-dropdown></div>
 
 <app-esri-map
   [center]="mapCenter"

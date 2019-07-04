@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-map-nav',
@@ -7,12 +8,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MapNavComponent implements OnInit {
 
-  constructor() { }
+  cities: SelectItem[];
 
+    selectedCity: string;
+
+    constructor() {
+        this.cities = [];
+        this.cities.push({label:'Moscow', value:'1'});
+        this.cities.push({label:'Istanbul', value:'2'});
+        this.cities.push({label:'Berlin', value:'3'});
+        this.cities.push({label:'Paris', value:'4'});
+    }
+
+   
   ngOnInit() {
   }
 
-  mapCenter = [-122.4194, 37.7749];
+  mapCenter = [-73.95, 40.702];
   basemapType = 'satellite';
   mapZoomLevel = 12;
 
